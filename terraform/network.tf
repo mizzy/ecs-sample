@@ -47,14 +47,14 @@ resource "aws_route_table_association" "public1" {
 }
 
 resource "aws_subnet" "private0" {
-  cidr_block = "10.0.2.0/24"
-  vpc_id     = aws_vpc.ecs_sample.id
+  cidr_block        = "10.0.2.0/24"
+  vpc_id            = aws_vpc.ecs_sample.id
   availability_zone = "ap-northeast-1a"
 }
 
 resource "aws_subnet" "private1" {
-  cidr_block = "10.0.3.0/24"
-  vpc_id     = aws_vpc.ecs_sample.id
+  cidr_block        = "10.0.3.0/24"
+  vpc_id            = aws_vpc.ecs_sample.id
   availability_zone = "ap-northeast-1c"
 }
 
@@ -77,35 +77,35 @@ resource "aws_route_table_association" "private1" {
 }
 
 resource "aws_eip" "ngw0" {
-  vpc = true
+  vpc        = true
   depends_on = [aws_internet_gateway.igw]
 }
 
 resource "aws_eip" "ngw1" {
-  vpc = true
+  vpc        = true
   depends_on = [aws_internet_gateway.igw]
 }
 
 resource "aws_nat_gateway" "ngw0" {
   allocation_id = aws_eip.ngw0.id
-  subnet_id = aws_subnet.public0.id
-  depends_on = [aws_internet_gateway.igw]
+  subnet_id     = aws_subnet.public0.id
+  depends_on    = [aws_internet_gateway.igw]
 }
 
 resource "aws_nat_gateway" "ngw1" {
   allocation_id = aws_eip.ngw1.id
-  subnet_id = aws_subnet.public1.id
-  depends_on = [aws_internet_gateway.igw]
+  subnet_id     = aws_subnet.public1.id
+  depends_on    = [aws_internet_gateway.igw]
 }
 
 resource "aws_route" "private0" {
-  route_table_id = aws_route_table.private0.id
-  nat_gateway_id = aws_nat_gateway.ngw0.id
+  route_table_id         = aws_route_table.private0.id
+  nat_gateway_id         = aws_nat_gateway.ngw0.id
   destination_cidr_block = "0.0.0.0/0"
 }
 
 resource "aws_route" "private1" {
-  route_table_id = aws_route_table.private1.id
-  nat_gateway_id = aws_nat_gateway.ngw1.id
+  route_table_id         = aws_route_table.private1.id
+  nat_gateway_id         = aws_nat_gateway.ngw1.id
   destination_cidr_block = "0.0.0.0/0"
 }
